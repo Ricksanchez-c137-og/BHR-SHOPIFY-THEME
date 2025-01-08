@@ -1,0 +1,209 @@
+<section class="all-collections">
+  <h1>Featured Collections</h1>
+  <div class="collection-container">
+    <div class="all-collections-wrapper">
+      {% for collection in collections %}
+        <div class="collection-card">
+          <img
+            width="300"
+            height="300"
+            loading="lazy"
+            src="{{ collection.featured_image | image_url }}"
+            alt="{{ collection.title }}"
+          >
+          <h3>{{- collection.title | link_to: collection.url }}</h3>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="scroll-buttons">
+      <button class="scroll-left">&lt;</button>
+      <button class="scroll-right">&gt;</button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .all-collections {
+    background: {{ section.settings.background }};
+    color: {{ section.settings.text_color }};
+    padding: 20px;
+    text-align: center;
+  }
+
+  .collection-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .all-collections-wrapper {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .collection-card {
+    flex: 0 0 auto;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    transform: scale(1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .collection-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .collection-card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .collection-card h3 {
+    margin: 10px 0;
+    font-size: 18px;
+  }
+
+  .collection-card h3 a {
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .collection-card h3 a:hover {
+    text-decoration: underline;
+  }
+
+  .scroll-buttons {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+  }
+
+  .scroll-buttons button {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .scroll-buttons button:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  @media (max-width: 768px) {
+    .collection-card {
+      width: 200px;
+    }
+
+    .scroll-buttons {
+      display: none; /* Hide buttons for smaller screens; swipe functionality will take over */
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const wrapper = document.querySelector('.all-collections-wrapper');
+    const scrollLeftButton = document.querySelector('.scroll-left');
+    const scrollRightButton = document.querySelector('.scroll-right');
+    const collectionContainer = document.querySelector('.collection-container');
+
+    let scrollAmount = 0;
+    const cardWidth = 320; // Adjust based on card width
+    const scrollSpeed = 3000; // Auto-scroll interval
+
+    // Scroll left
+    scrollLeftButton.addEventListener('click', function () {
+      scrollAmount = Math.max(scrollAmount - cardWidth, 0);
+      wrapper.style.transform = `translateX(-${scrollAmount}px)`;
+    });
+
+    // Scroll right
+    scrollRightButton.addEventListener('click', function () {
+      const maxScroll = wrapper.scrollWidth - collectionContainer.offsetWidth;
+      scrollAmount = Math.min(scrollAmount + cardWidth, maxScroll);
+      wrapper.style.transform = `translateX(-${scrollAmount}px)`;
+    });
+
+    // Auto-scroll
+    setInterval(function () {
+      const maxScroll = wrapper.scrollWidth - collectionContainer.offsetWidth;
+      if (scrollAmount >= maxScroll) {
+        scrollAmount = 0; // Reset scroll
+      } else {
+        scrollAmount += cardWidth;
+      }
+      wrapper.style.transform = `translateX(-${scrollAmount}px)`;
+    }, scrollSpeed);
+
+    // Swipe functionality for touch devices
+    let startX, endX;
+    collectionContainer.addEventListener('touchstart', function (e) {
+      startX = e.touches[0].clientX;
+    });
+
+    collectionContainer.addEventListener('touchmove', function (e) {
+      endX = e.touches[0].clientX;
+    });
+
+    collectionContainer.addEventListener('touchend', function () {
+      if (startX - endX > 50) {
+        scrollRightButton.click(); // Swipe left
+      } else if (endX - startX > 50) {
+        scrollLeftButton.click(); // Swipe right
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "all-collections",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "number",
+      "id": "visible_cards",
+      "label": "Number of Visible Cards",
+      "default": 3
+    },
+    {
+      "type": "number",
+      "id": "animation_speed",
+      "label": "Auto-Scroll Speed (ms)",
+      "default": 3000
+    }
+  ],
+  "presets": [
+    {
+      "name": "all-collections"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,195 @@
+<section class="all-products">
+  <h1>{{ collections['air-force'].title }}</h1>
+  <div class="product-container">
+    <div class="all-products-wrapper">
+      {% for product in collections['air-force'].products %}
+        <div class="product-card">
+          <img
+            class="product-image"
+            width="300"
+            height="300"
+            loading="lazy"
+            src="{{ product.featured_image | image_url }}"
+            alt="{{ product.title }}"
+          >
+          <h3>{{- product.title | link_to: product.url }}</h3>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="scroll-buttons">
+      <button class="scroll-left">&lt;</button>
+      <button class="scroll-right">&gt;</button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .all-products {
+    background: {{ section.settings.background }};
+    color: {{ section.settings.text_color }};
+    padding: 20px;
+    text-align: center;
+  }
+
+  .product-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .all-products-wrapper {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.5s ease-in-out;
+    padding: 10px 0;
+  }
+
+  .product-card {
+    flex: 0 0 auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+
+  .product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .product-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .product-card h3 {
+    margin: 10px 0;
+    font-size: 16px;
+    color: {{ section.settings.text_color }};
+  }
+
+  .product-card h3 a {
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+  }
+
+  .product-card h3 a:hover {
+    color: #007acc;
+  }
+
+  .scroll-buttons {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .scroll-buttons button {
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .scroll-buttons button:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  @media (max-width: 768px) {
+    .all-products-wrapper {
+      gap: 10px;
+    }
+
+    .product-card {
+      width: 180px;
+    }
+
+    .scroll-buttons {
+      display: none; /* Hide buttons on mobile for swipe functionality */
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const wrapper = document.querySelector('.all-products-wrapper');
+    const scrollLeftButton = document.querySelector('.scroll-left');
+    const scrollRightButton = document.querySelector('.scroll-right');
+
+    // Scroll left
+    scrollLeftButton.addEventListener('click', function () {
+      wrapper.scrollBy({
+        left: -300, // Adjust based on card width
+        behavior: 'smooth',
+      });
+    });
+
+    // Scroll right
+    scrollRightButton.addEventListener('click', function () {
+      wrapper.scrollBy({
+        left: 300, // Adjust based on card width
+        behavior: 'smooth',
+      });
+    });
+
+    // Swipe functionality for touch devices
+    let startX, endX;
+    wrapper.addEventListener('touchstart', function (e) {
+      startX = e.touches[0].clientX;
+    });
+
+    wrapper.addEventListener('touchmove', function (e) {
+      endX = e.touches[0].clientX;
+    });
+
+    wrapper.addEventListener('touchend', function () {
+      if (startX - endX > 50) {
+        scrollRightButton.click(); // Swipe left
+      } else if (endX - startX > 50) {
+        scrollLeftButton.click(); // Swipe right
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "All Products",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background Color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default"
+    }
+  ]
+}
+{% endschema %}

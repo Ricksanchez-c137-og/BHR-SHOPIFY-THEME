@@ -1,0 +1,125 @@
+<section>
+  <div class="banner-wrapper">
+    <div class="slide-text" id="text1"><p>Members: Free Shipping!</p></div>
+    <div class="slide-text" id="text2"><p>Save Up to 40%</p></div>
+    <div class="slide-text" id="text3"><p>Get Your Gear Faster</p></div>
+  </div>
+</section>
+
+<style>
+  .banner-wrapper {
+    padding: 30px;
+    background: {{ section.settings.background }};
+    color: {{ section.settings.text_color }};
+    position: relative;
+    overflow: hidden;
+    height: 100px; /* Adjust based on your content */
+  }
+
+  .slide-text {
+    position: absolute;
+    top: 50%;
+    left: -150%;
+    transform: translateY(-50%);
+    color: black;
+    padding: 20px;
+    font-size: 20px;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: left 1s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 1s ease-in-out;
+    opacity: 0; /* Start with opacity 0 */
+  }
+
+  .slide-text.active {
+    left: 40%;
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .slide-text {
+      font-size: 16px;
+    }
+  }
+
+  .banner-wrapper:hover .slide-text {
+    animation-play-state: paused;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const texts = Array.from(document.querySelectorAll('.slide-text'));
+    let currentIndex = 0;
+
+    // Function to activate the text
+    function activateText(index) {
+      texts.forEach((text, i) => {
+        text.classList.remove('active');
+        if (i === index) text.classList.add('active');
+      });
+    }
+
+    // Function to update texts dynamically from JSON
+    function updateTexts(textArray) {
+      texts.forEach((text, index) => {
+        if (textArray[index]) {
+          text.innerHTML = `<p>${textArray[index]}</p>`;
+        }
+      });
+    }
+
+    // Initialize slider
+    function startSlider() {
+      activateText(currentIndex);
+      setInterval(() => {
+        currentIndex = (currentIndex + 1) % texts.length;
+        activateText(currentIndex);
+      }, 3000);
+    }
+
+    // Optional: Dynamic text update
+    const dynamicTexts = ["Flash Sale: 50% Off!", "New Arrivals Here!", "Limited Time Offers!"];
+    updateTexts(dynamicTexts);
+
+    // Start the slider
+    startSlider();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Enhanced Banner",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "font_picker",
+      "id": "font",
+      "label": "Font Style",
+      "default": "Arial"
+    },
+    {
+      "type": "text",
+      "id": "custom_texts",
+      "label": "Custom Texts (Comma Separated)",
+      "default": "Welcome,Free Shipping,Save Big"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Enhanced Banner"
+    }
+  ]
+}
+{% endschema %}

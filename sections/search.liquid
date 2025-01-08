@@ -1,0 +1,109 @@
+<section class="search-page">
+  {% if search.performed %}
+    <h1>Search Results</h1>
+    <div class="search-results">
+      {% if search.results.size > 0 %}
+        {% for result in search.results %}
+          <div class="search-result-item">
+            <p><strong>Type:</strong> {{ result.object_type }}</p>
+            <p><strong>Title:</strong> {{ result.title }}</p>
+            <a href="{{ result.url }}">View More</a>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-results">No results found for "{{ search.terms }}"</p>
+      {% endif %}
+    </div>
+  {% else %}
+    <h1>No Search Performed</h1>
+  {% endif %}
+</section>
+
+<style>
+  .search-page {
+    background-color: {{ section.settings.background }};
+    color: {{ section.settings.text_color }};
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+
+  .search-page h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .search-result-item {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .search-result-item p {
+    margin: 5px 0;
+  }
+
+  .search-result-item a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #007acc;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+
+  .search-result-item a:hover {
+    color: #005f99;
+  }
+
+  .no-results {
+    font-size: 18px;
+    color: #555;
+  }
+
+  @media (max-width: 768px) {
+    .search-results {
+      padding: 10px;
+    }
+
+    .search-result-item {
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Search Page",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background Color",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Search Page"
+    }
+  ]
+}
+{% endschema %}

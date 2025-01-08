@@ -1,0 +1,130 @@
+<section class="customer-account" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <h1>Customer Account</h1>
+  
+  <!-- Orders Section -->
+  <div class="customer-orders">
+    <h2>Order History</h2>
+    {% paginate customer.orders by 10 %}
+      {% if customer.orders.size > 0 %}
+        <ul class="orders-list">
+          {% for order in customer.orders %}
+            <li class="order-item">
+              <p><strong>Order #:</strong> {{ order.name }}</p>
+              <p><strong>Date:</strong> {{ order.created_at | date: '%B %d, %Y' }}</p>
+              <p><strong>Status:</strong> {{ order.financial_status | capitalize }}</p>
+              <p><strong>Total:</strong> {{ order.total_price | money }}</p>
+              <a href="/account/orders/{{ order.id }}">View Details</a>
+            </li>
+          {% endfor %}
+        </ul>
+        {{ paginate | default_pagination }}
+      {% else %}
+        <p>No orders found.</p>
+      {% endif %}
+    {% endpaginate %}
+  </div>
+
+  <!-- Address Section -->
+  <div class="customer-address">
+    <h2>Default Address</h2>
+    {% if customer.default_address %}
+      <p>{{ customer.default_address.address1 }}</p>
+      {% if customer.default_address.address2 != blank %}
+        <p>{{ customer.default_address.address2 }}</p>
+      {% endif %}
+      <p>{{ customer.default_address.city }}, {{ customer.default_address.province_code }}, {{ customer.default_address.country_code }}</p>
+      <p>{{ customer.default_address.zip_code }}</p>
+      <p>{{ customer.default_address.phone }}</p>
+    {% else %}
+      <p>No default address on file.</p>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .customer-account {
+    font-family: Arial, sans-serif;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .customer-account h1, .customer-account h2 {
+    color: #007acc;
+  }
+
+  .customer-orders, .customer-address {
+    margin-top: 20px;
+  }
+
+  .orders-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .order-item {
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .order-item a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #007acc;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .order-item a:hover {
+    text-decoration: underline;
+  }
+
+  .customer-address p {
+    margin: 5px 0;
+  }
+
+  .customer-account h2 {
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Customer Account",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Padding Settings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,155 @@
+<section class="product-main">
+  <div class="product-main-wrapper">
+    <!-- Product Image -->
+    <div class="product-image">
+      <img
+        width="600"
+        height="600"
+        loading="lazy"
+        src="{{ product.featured_image | image_url }}"
+        alt="{{ product.title }}"
+      >
+    </div>
+
+    <!-- Product Details -->
+    <div class="product-details">
+      <h1>{{ product.title }}</h1>
+      <p class="product-price">{{ product.price | money }}</p>
+      <p class="product-description">{{ product.description }}</p>
+      <h3>Select Size</h3>
+      {% form 'product', product %}
+        <div class="variant-selector">
+          <select name="id">
+            {% for variant in product.variants %}
+              <option value="{{ variant.id }}">
+                {{ variant.title }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="add-to-cart">Add to Cart</button>
+      {% endform %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .product-main {
+    background: {{ section.settings.background }};
+    color: {{ section.settings.text_color }};
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+
+  .product-main-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .product-image {
+    flex: 1;
+    max-width: 600px;
+  }
+
+  .product-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-details {
+    flex: 1;
+    max-width: 600px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-details h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .product-price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #007acc;
+    margin-bottom: 20px;
+  }
+
+  .product-description {
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .variant-selector {
+    margin-bottom: 20px;
+  }
+
+  .variant-selector select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f9f9f9;
+  }
+
+  .add-to-cart {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .add-to-cart:hover {
+    background-color: #2980b9;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .product-main-wrapper {
+      flex-direction: column;
+    }
+
+    .product-image,
+    .product-details {
+      max-width: 100%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Product Main",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background Color",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default Product Layout"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,192 @@
+{% form 'cart', cart %}
+    <section class="cart-sec">
+      {% if cart.empty? %}
+        <div class="empty-cart">
+          <p>Your cart is currently empty.</p>
+          <a href="/" class="shop-link">Continue Shopping</a>
+        </div>
+      {% else %}
+        <div class="cart-items-container">
+          {% for item in cart.items %}
+            <div class="cart-item">
+              <img
+                class="cart-item-image"
+                width="200"
+                height="200"
+                loading="lazy"
+                src="{{ item.image | image_url }}"
+                alt="{{ item.title }}"
+              >
+              <div class="cart-item-details">
+                <h2>{{ item.title }}</h2>
+                <p class="cart-item-price">{{ item.final_line_price | money }}</p>
+                <div class="cart-item-actions">
+                  <input type="number" name="updates[]" value="{{ item.quantity }}" class="quantity-input" min="1">
+                  <a href="{{ item.url_to_remove }}" class="remove-link">Remove</a>
+                </div>
+              </div>
+            </div>
+            <hr class="divider">
+          {% endfor %}
+          <div class="cart-summary">
+            <p class="total-price">Total: {{ cart.total_price | money }}</p>
+            <button type="submit" name="update" class="update-btn">Update Cart</button>
+            <button type="submit" name="checkout" class="checkout-btn">Checkout</button>
+          </div>
+        </div>
+      {% endif %}
+    </section>
+  {% endform %}
+  
+  <style>
+    .cart-sec {
+      background-color: {{ section.settings.background }};
+      color: {{ section.settings.text_color }};
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+  
+    .empty-cart {
+      text-align: center;
+      font-size: 18px;
+    }
+  
+    .shop-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: white;
+      background-color: #007acc;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease-in-out;
+    }
+  
+    .shop-link:hover {
+      background-color: #005f99;
+    }
+  
+    .cart-items-container {
+      width: 100%;
+      max-width: 800px;
+    }
+  
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+  
+    .cart-item-image {
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  
+    .cart-item-details {
+      flex: 1;
+    }
+  
+    .cart-item-price {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+  
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  
+    .quantity-input {
+      width: 60px;
+      text-align: center;
+    }
+  
+    .remove-link {
+      color: #ff4d4d;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease-in-out;
+    }
+  
+    .remove-link:hover {
+      color: #cc0000;
+    }
+  
+    .divider {
+      margin: 15px 0;
+      border: 0;
+      height: 1px;
+      background-color: #e0e0e0;
+    }
+  
+    .cart-summary {
+      text-align: right;
+      margin-top: 20px;
+    }
+  
+    .total-price {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  
+    .update-btn, .checkout-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+  
+    .update-btn {
+      background-color: #f4b400;
+      color: white;
+      margin-right: 10px;
+    }
+  
+    .update-btn:hover {
+      background-color: #d69e00;
+    }
+  
+    .checkout-btn {
+      background-color: #28a745;
+      color: white;
+    }
+  
+    .checkout-btn:hover {
+      background-color: #218838;
+    }
+  </style>
+  
+  {% schema %}
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background Color",
+        "default": "#f9f9f9"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text Color",
+        "default": "#000000"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Default Cart"
+      }
+    ]
+  }
+  {% endschema %}
+  

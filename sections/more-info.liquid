@@ -1,0 +1,133 @@
+<section class="more-info">
+  <div class="more-info-wrapper">
+    {% if section.settings.text != blank %}
+      <h1>{{ section.settings.text }}</h1>
+    {% else %}
+      <h1>Default Title</h1>
+    {% endif %}
+
+    {% if section.settings.text2 != blank %}
+      <p>{{ section.settings.text2 }}</p>
+    {% else %}
+      <p>Default description text goes here. Edit in the theme editor.</p>
+    {% endif %}
+
+    <a href="{{ section.settings.button_link }}" class="more-info-button">
+      {{ section.settings.button_text }}
+    </a>
+  </div>
+</section>
+
+<style>
+  .more-info {
+    background: {{ section.settings.background }};
+    color: {{ section.settings.text_color }};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .more-info-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .more-info-wrapper h1 {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: {{ section.settings.text_color }};
+  }
+
+  .more-info-wrapper p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    color: {{ section.settings.text_color }};
+  }
+
+  .more-info-button {
+    padding: 12px 30px;
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .more-info-button:hover {
+    background-color: rgb(185, 185, 185);
+    color: black;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .more-info-wrapper h1 {
+      font-size: 28px;
+    }
+
+    .more-info-wrapper p {
+      font-size: 16px;
+    }
+
+    .more-info-button {
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "More Info",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background Color",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Heading Text",
+      "default": "The Resolutions Starter Pack"
+    },
+    {
+      "type": "textarea",
+      "id": "text2",
+      "label": "Description Text",
+      "default": "Go for all your fitness goals with a curated collection of new kicks, breathable apparel, and more supportive styles."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [
+    {
+      "name": "More Info Section"
+    }
+  ]
+}
+{% endschema %}
