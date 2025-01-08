@@ -1,0 +1,97 @@
+<header class="navbar">
+  <div class="logo">
+    <a href="/">
+      <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}" class="logo-img">
+    </a>
+  </div>
+
+  <nav class="nav-links">
+    <ul>
+      {% for link in linklists['main-menu'].links %}
+        <li>
+          <a href="{{ link.url }}">{{ link.title }}</a>
+          {% if link.links.size > 0 %}
+            <ul class="dropdown">
+              {% for sublink in link.links %}
+                <li><a href="{{ sublink.url }}">{{ sublink.title }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+
+  <div class="right-nav">
+    <a href="/cart" class="cart-link">Cart</a>
+  </div>
+
+  <button class="mobile-menu-toggle">Menu</button>
+</header>
+
+<style>
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+  }
+
+  .nav-links ul {
+    display: flex;
+    gap: 20px;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .dropdown {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    list-style: none;
+  }
+
+  li:hover .dropdown {
+    display: block;
+  }
+
+  .mobile-menu-toggle {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .nav-links ul {
+      display: none;
+      flex-direction: column;
+    }
+
+    .mobile-menu-toggle {
+      display: block;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Navbar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    }
+  ]
+}
+{% endschema %}

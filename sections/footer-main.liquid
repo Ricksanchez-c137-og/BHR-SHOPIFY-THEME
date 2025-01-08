@@ -1,6 +1,6 @@
 <footer class="footer-main">
   <div class="footer-sec-1">
-    {%- if section.blocks.size == 0 -%}
+    {% if section.blocks.size == 0 %}
       <div class="footer-column">
         <p><a href="#">Guides</a></p>
         <p><a href="#">Terms of Sale</a></p>
@@ -27,22 +27,26 @@
       {% endfor %}
     {% endif %}
   </div>
+
+  <div class="footer-social">
+    <a href="https://facebook.com" target="_blank">Facebook</a>
+    <a href="https://twitter.com" target="_blank">Twitter</a>
+    <a href="https://instagram.com" target="_blank">Instagram</a>
+  </div>
+
   <div class="footer-sec-2">
-    <p>&copy; {{ 'now' | date: '%Y' }} Your Company. All Rights Reserved.</p>
+    <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All Rights Reserved.</p>
   </div>
 </footer>
 
 <style>
-  /* Footer Main Styling */
   .footer-main {
     background: {{ section.settings.background }};
     color: {{ section.settings.text_color }};
     padding: 40px 20px;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
+    font-family: {{ section.settings.font }};
   }
 
-  /* Section 1: Dynamic Columns */
   .footer-sec-1 {
     display: flex;
     justify-content: space-between;
@@ -52,12 +56,8 @@
 
   .footer-column {
     flex: 1;
-    min-width: 200px; /* Ensures columns stack neatly */
+    min-width: 200px;
     max-width: 250px;
-  }
-
-  .footer-column p {
-    margin: 5px 0;
   }
 
   .footer-column a {
@@ -70,15 +70,28 @@
     color: #007acc;
   }
 
-  /* Section 2: Bottom Section */
+  .footer-social {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .footer-social a {
+    margin: 0 10px;
+    color: inherit;
+    text-decoration: none;
+    font-size: 16px;
+  }
+
+  .footer-social a:hover {
+    color: #007acc;
+  }
+
   .footer-sec-2 {
     text-align: center;
-    margin-top: 20px;
     font-size: 12px;
     color: #aaa;
   }
 
-  /* Responsive Design */
   @media (max-width: 768px) {
     .footer-sec-1 {
       flex-direction: column;
@@ -105,7 +118,7 @@
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#F4F4F4"
+      "default": "#ffffff"
     },
     {
       "type": "font_picker",
@@ -135,7 +148,7 @@
   ],
   "presets": [
     {
-      "name": "Default Footer"
+      "name": "Enhanced Footer"
     }
   ]
 }
